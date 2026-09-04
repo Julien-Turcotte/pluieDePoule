@@ -3,34 +3,40 @@
     public static List<Poule> poules = new List<Poule>();
     static void Main()
     {
-        Random random = new Random();Console.OutputEncoding = System.Text.Encoding.UTF8;
+        Random random = new Random();
+        Console.OutputEncoding = System.Text.Encoding.UTF8;
         
         while (true)
         {
-            poules.Add(new Poule(random.Next(1, Console.WindowWidth)));
-            
-            foreach (Poule p in poules.ToList())
+            int width = Console.WindowWidth;
+            int height = Console.WindowHeight;
+
+            poules.Add(new Poule(random.Next(width)));
+
+            Console.Clear();
+
+            for (int i = poules.Count - 1; i >= 0; i--)
             {
-                if (p.X >= Console.WindowWidth || p.Y >= Console.WindowHeight - 2)
+                Poule p = poules[i];
+
+                if (p.Y >= height - 2)
                 {
-                    poules.Remove(p);
+                    poules.RemoveAt(i);
+                    continue;
                 }
-                else
+                try
                 {
-                    try
-                    {
-                        Console.SetCursorPosition(p.X, p.Y); Console.Write("🐔");
-                    }
-                    catch { }
+                    Console.SetCursorPosition(p.X, p.Y);
+                    Console.Write("🐔");
                 }
+                catch (ArgumentOutOfRangeException){}
                 p.Tomber();
             }
-            Thread.Sleep(3);Console.Clear();
         }
     }
 }
 public class Poule
-{
+{   
     public int X { get; set; }
     public int Y { get; set; }
 
