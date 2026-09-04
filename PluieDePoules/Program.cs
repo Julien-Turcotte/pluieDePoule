@@ -1,75 +1,43 @@
-﻿using PluieDePoules;
-
-class Program
+﻿class Program
 {
-    static void Main(string[] args)
+    public static List<Poule> poules = new List<Poule>();
+    static void Main()
     {
-
-        Random random = new Random();
-        Console.OutputEncoding = System.Text.Encoding.UTF8;
+        Random random = new Random();Console.OutputEncoding = System.Text.Encoding.UTF8;
         
-        List<Poule> poules = new List<Poule>();
-
         while (true)
         {
-            Poule? nouvellePoule = CreerPoule(random.Next(1, Console.WindowWidth), random.Next(0, 100));
-            if (nouvellePoule != null)
-            {
-                poules.Add(nouvellePoule);
-            }
-
+            poules.Add(new Poule(random.Next(1, Console.WindowWidth)));
+            
             foreach (Poule p in poules.ToList())
             {
-                if (CheckSol(p))
+                if (p.X >= Console.WindowWidth || p.Y >= Console.WindowHeight - 2)
                 {
                     poules.Remove(p);
                 }
-            }
-
-            UpdateStatus(poules);
-            Thread.Sleep(3);
-        }
-    }
-
-    /// <summary>
-    /// A 20% de chance de créer une poule
-    /// </summary>
-    /// <param name="x">la position horizontale de la poule</param>
-    /// <param name="random">un nombre qui determine si la poule va apparaite</param>
-    /// <returns>La poule si créer</returns>
-    private static Poule? CreerPoule(int x, int random)
-    {
-        if (random < 100)
-        {
-            Poule p = new Poule(x);
-            return p;
-        }
-        return null;
-    }
-
-    /// <summary>
-    /// reaffiche les poules une case plus bas
-    /// </summary>
-    /// <param name="poules">La liste de poules sur l'écran</param>
-    private static void UpdateStatus(List<Poule> poules)
-    {
-        Console.Clear();
-        foreach(Poule p in poules)
-        {
-            try
-            {
+                else
+                {
+                    try
+                    {
+                        Console.SetCursorPosition(p.X, p.Y); Console.Write("🐔");
+                    }
+                    catch { }
+                }
                 p.Tomber();
-                Console.SetCursorPosition(p.x, p.y);
-                Console.Write("🐔");
-            } catch 
-            {
-                continue;
             }
+            Thread.Sleep(3);Console.Clear();
         }
     }
-    private static bool CheckSol(Poule poule)
-    {
-        return poule.y >= Console.WindowHeight - 2 || poule.x >= Console.WindowWidth;
-    }
+}
+public class Poule
+{
+    public int X { get; set; }
+    public int Y { get; set; }
 
+    public Poule(int x, int y = 0)
+    {
+        X = x;
+        Y = y;
+    }
+    public void Tomber() => Y++;
 }
