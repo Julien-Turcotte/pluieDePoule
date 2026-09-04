@@ -25,8 +25,9 @@ class Program
                     poules.Remove(p);
                 }
             }
+
             UpdateStatus(poules);
-            Thread.Sleep(100);
+            Thread.Sleep(3);
         }
     }
 
@@ -38,7 +39,7 @@ class Program
     /// <returns>La poule si créer</returns>
     private static Poule? CreerPoule(int x, int random)
     {
-        if (random < 20)
+        if (random < 100)
         {
             Poule p = new Poule(x);
             return p;
@@ -55,15 +56,20 @@ class Program
         Console.Clear();
         foreach(Poule p in poules)
         {
-            p.Tomber();
-            Console.SetCursorPosition(p.x, p.y);
-            Console.Write("🐔");
+            try
+            {
+                p.Tomber();
+                Console.SetCursorPosition(p.x, p.y);
+                Console.Write("🐔");
+            } catch 
+            {
+                continue;
+            }
         }
-
     }
     private static bool CheckSol(Poule poule)
     {
-        return poule.y >= Console.WindowHeight - 2;
+        return poule.y >= Console.WindowHeight - 2 || poule.x >= Console.WindowWidth;
     }
 
 }
